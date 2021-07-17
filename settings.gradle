@@ -1,0 +1,2 @@
+rootProject.name = "ReadReceivedText"
+include ':app'
