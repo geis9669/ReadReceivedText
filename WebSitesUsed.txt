@@ -1,0 +1,5 @@
+
+SMS Messages
+https://google-developer-training.github.io/android-developer-phone-sms-course/Lesson%202/2_c_sms_messages.html
+
+https://javapapers.com/android/android-receive-sms-tutorial/
