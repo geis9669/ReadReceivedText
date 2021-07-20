@@ -20,6 +20,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        CreateCheckPermissionsButton();
+    }
+
+    private void CreateCheckPermissionsButton()
+    {
         button = findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener(){
 
