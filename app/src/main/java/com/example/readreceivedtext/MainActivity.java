@@ -13,12 +13,18 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
     private static final int Request_Permission = 1;
+    private static MainActivity inst;
     Button button;
+
+    public static MainActivity instance() {
+        return inst;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        inst = this;
 
         CreateCheckPermissionsButton();
     }

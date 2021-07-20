@@ -6,19 +6,24 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
+import android.speech.tts.UtteranceProgressListener;
 import android.telephony.SmsMessage;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.util.Locale;
+
 public class SmsReceiver extends BroadcastReceiver {
     public static final String SMS_BUNDLE = "pdus";
+    public TextToSpeech ttobj;
 
     @Override
     public void onReceive(Context context, Intent intent) {
         // This method is called when the BroadcastReceiver is receiving
         // an Intent broadcast.
 
-        Toast.makeText(context, "Start OnReceive", Toast.LENGTH_LONG).show();
+//        Toast.makeText(context, "Start OnReceive", Toast.LENGTH_LONG).show();
 
         Bundle intentExtras = intent.getExtras();
         if(intentExtras != null){
@@ -36,6 +41,38 @@ public class SmsReceiver extends BroadcastReceiver {
             //this will update the UI with message
             SmsActivity inst = SmsActivity.instance();
             inst.updateList(smsMessageStr);
+
+            ttobj = new TextToSpeech(MainActivity.instance().getApplicationContext(), new TextToSpeech.OnInitListener() {
+                public void onInit(int status)
+                {
+                    if(status != TextToSpeech.ERROR)
+                    {
+                        ttobj.setLanguage(Locale.US);
+                    }
+                }
+            });
+            ttobj.setOnUtteranceProgressListener(new UtteranceProgressListener() {
+                @Override
+                public void onStart(String utteranceId) {
+
+                }
+
+                @Override
+                public void onDone(String utteranceId) {
+                    ttobj.stop();
+                    ttobj.shutdown();
+                }
+
+                @Override
+                public void onError(String utteranceId) {
+                    ttobj.stop();
+                    ttobj.shutdown();
+                }
+            });
+
+            ttobj.speak(smsMessageStr, TextToSpeech.QUEUE_FLUSH, null);
+
+
         }
 
 
