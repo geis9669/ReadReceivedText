@@ -12,18 +12,20 @@ import android.telephony.SmsMessage;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
+
+import java.util.HashMap;
 import java.util.Locale;
 
 public class SmsReceiver extends BroadcastReceiver {
     public static final String SMS_BUNDLE = "pdus";
+    public static final String SPEAKING_ID = "speakingMessage";
     public TextToSpeech ttobj;
 
+//    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onReceive(Context context, Intent intent) {
-        // This method is called when the BroadcastReceiver is receiving
-        // an Intent broadcast.
-
-//        Toast.makeText(context, "Start OnReceive", Toast.LENGTH_LONG).show();
+        // This method is called when the BroadcastReceiver is receiving an Intent broadcast.
 
         Bundle intentExtras = intent.getExtras();
         if(intentExtras != null){
@@ -43,19 +45,14 @@ public class SmsReceiver extends BroadcastReceiver {
 //            inst.updateList(smsMessageStr);
 
 
-//               CreateTextToSpeech();
-            ttobj = new TextToSpeech(MainActivity.instance().getApplicationContext(), status -> {
-                if(status != TextToSpeech.ERROR)
-                {
-
-                }
-            });
-            ttobj.setLanguage(Locale.US);
-            ttobj.speak(smsMessageStr, TextToSpeech.QUEUE_FLUSH, null);
+            CreateTextToSpeech();
+            HashMap<String, String> params = new HashMap<>();
+            params.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, SPEAKING_ID);
+            ttobj.speak(smsMessageStr, TextToSpeech.QUEUE_FLUSH, params);
             }
 
 
-        // Get the SMS message
+//        // Get the SMS message
 //        Bundle bundle = intent.getExtras();
 //        SmsMessage[] msgs;
 //        String strMessage = "";
@@ -103,16 +100,22 @@ public class SmsReceiver extends BroadcastReceiver {
 
             @Override
             public void onDone(String utteranceId) {
-//                ttobj.stop();
-//                ttobj.shutdown();
-//                ttobj = null;
+                if(SPEAKING_ID.equals(utteranceId))
+                {
+                    ttobj.stop();
+                    ttobj.shutdown();
+                    ttobj = null;
+                }
             }
 
             @Override
             public void onError(String utteranceId) {
-                ttobj.stop();
-                ttobj.shutdown();
-                ttobj = null;
+                if(SPEAKING_ID.equals(utteranceId))
+                {
+                    ttobj.stop();
+                    ttobj.shutdown();
+                    ttobj = null;
+                }
             }
         });
     }
