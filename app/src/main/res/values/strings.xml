@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">ReadReceivedText</string>
+    <string name="checkPermissions">check the permissions</string>
+    <string name="goToSecondScreen">go to second screen</string>
 </resources>

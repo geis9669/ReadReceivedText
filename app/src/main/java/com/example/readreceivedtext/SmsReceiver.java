@@ -41,8 +41,8 @@ public class SmsReceiver extends BroadcastReceiver {
             Toast.makeText(context, smsMessageStr, Toast.LENGTH_SHORT).show();
 
             //this will update the UI with message
-//            SmsActivity inst = SmsActivity.instance();
-//            inst.updateList(smsMessageStr);
+            SmsActivity inst = SmsActivity.instance();
+            inst.updateList(smsMessageStr);
 
 
             CreateTextToSpeech();
