@@ -39,41 +39,20 @@ public class SmsReceiver extends BroadcastReceiver {
             Toast.makeText(context, smsMessageStr, Toast.LENGTH_SHORT).show();
 
             //this will update the UI with message
-            SmsActivity inst = SmsActivity.instance();
-            inst.updateList(smsMessageStr);
+//            SmsActivity inst = SmsActivity.instance();
+//            inst.updateList(smsMessageStr);
 
-            ttobj = new TextToSpeech(MainActivity.instance().getApplicationContext(), new TextToSpeech.OnInitListener() {
-                public void onInit(int status)
+
+//               CreateTextToSpeech();
+            ttobj = new TextToSpeech(MainActivity.instance().getApplicationContext(), status -> {
+                if(status != TextToSpeech.ERROR)
                 {
-                    if(status != TextToSpeech.ERROR)
-                    {
-                        ttobj.setLanguage(Locale.US);
-                    }
+
                 }
             });
-            ttobj.setOnUtteranceProgressListener(new UtteranceProgressListener() {
-                @Override
-                public void onStart(String utteranceId) {
-
-                }
-
-                @Override
-                public void onDone(String utteranceId) {
-                    ttobj.stop();
-                    ttobj.shutdown();
-                }
-
-                @Override
-                public void onError(String utteranceId) {
-                    ttobj.stop();
-                    ttobj.shutdown();
-                }
-            });
-
+            ttobj.setLanguage(Locale.US);
             ttobj.speak(smsMessageStr, TextToSpeech.QUEUE_FLUSH, null);
-
-
-        }
+            }
 
 
         // Get the SMS message
@@ -107,5 +86,34 @@ public class SmsReceiver extends BroadcastReceiver {
 //            }
 //        }
 
+    }
+
+    private void CreateTextToSpeech() {
+        ttobj = new TextToSpeech(MainActivity.instance().getApplicationContext(), status -> {
+            if(status != TextToSpeech.ERROR)
+            {
+                ttobj.setLanguage(Locale.US);
+            }
+        });
+        ttobj.setOnUtteranceProgressListener(new UtteranceProgressListener() {
+            @Override
+            public void onStart(String utteranceId) {
+
+            }
+
+            @Override
+            public void onDone(String utteranceId) {
+//                ttobj.stop();
+//                ttobj.shutdown();
+//                ttobj = null;
+            }
+
+            @Override
+            public void onError(String utteranceId) {
+                ttobj.stop();
+                ttobj.shutdown();
+                ttobj = null;
+            }
+        });
     }
 }
